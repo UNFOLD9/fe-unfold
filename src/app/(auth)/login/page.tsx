@@ -52,14 +52,14 @@ export default function LoginPage() {
         router.push("/home");
       } else {
         if ('errors' in response) {
-          setFieldErrors(response.errors as any);
+          setFieldErrors({ email: response.errors.email, password: response.errors.password });
         }
         if (response.message) {
           setError(response.message);
         }
       }
-    } catch (err: any) {
-      setError(err.message || "Terjadi kesalahan saat masuk. Silakan coba lagi.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Terjadi kesalahan saat masuk. Silakan coba lagi.");
     } finally {
       setIsLoading(false);
     }
