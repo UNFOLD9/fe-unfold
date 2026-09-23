@@ -5,3 +5,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+git rm --cached CLAUDE.md AGENTS.md
