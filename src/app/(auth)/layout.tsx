@@ -1,14 +1,19 @@
+"use client";
+
 import { ReactNode } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function AuthLayout({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
+  const isRegister = pathname === "/register";
   return (
     <div className="min-h-screen flex flex-col lg:flex-row" style={{ backgroundColor: "#F8F7FC" }}>
 
       {/* ── Left Hero Panel ── */}
       <div
         className="hidden lg:flex lg:w-[42%] xl:w-[40%] flex-col justify-between p-10 xl:p-12 relative overflow-hidden gap-8"
-        style={{ backgroundColor: "#EDE9FA" }}
+        style={{ backgroundColor: isRegister ? "#FEF3EB" : "#EDE9FA" }}
       >
         {/* Logo */}
         <div className="flex items-center gap-2">
@@ -30,13 +35,18 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
             className="text-3xl xl:text-4xl font-bold leading-tight mb-4"
             style={{ color: "#25233A" }}
           >
-            Kamu tidak harus<br />
-            menyelesaikan<br />
-            semuanya hari ini.
+            {isRegister ? (
+              <>Mulai dari satu<br />langkah kecil.</>
+            ) : (
+              <>Kamu tidak harus<br />menyelesaikan<br />semuanya hari ini.</>
+            )}
           </h1>
           <p className="text-sm leading-relaxed" style={{ color: "#6F6B80" }}>
-            Masuk untuk melanjutkan check-in, membaca refleksi<br />
-            pribadi, dan mengingat kemajuan kecilmu.
+            {isRegister ? (
+              <>Buat akun untuk menyimpan check-in, refleksi<br />pribadi, dan kemenangan kecilmu.</>
+            ) : (
+              <>Masuk untuk melanjutkan check-in, membaca refleksi<br />pribadi, dan mengingat kemajuan kecilmu.</>
+            )}
           </p>
         </div>
 
