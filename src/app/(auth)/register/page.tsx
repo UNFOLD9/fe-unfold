@@ -60,7 +60,7 @@ export default function RegisterPage() {
     try {
       const response = await register({ name, email, password });
       if (response.success) {
-        router.push("/home");
+        router.replace("/my-space");
       } else {
         if ('errors' in response) {
           setFieldErrors(response.errors);
@@ -185,6 +185,9 @@ export default function RegisterPage() {
           ) : (
             "Buat akun"
           )}
+        </button>
+        <button type="button" disabled className="mx-auto block cursor-not-allowed text-xs font-medium text-primary/60">
+          Kebijakan Privasi
         </button>
       </form>
 

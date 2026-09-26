@@ -51,7 +51,7 @@ export default function LoginPage() {
     try {
       const response = await login({ email, password });
       if (response.success) {
-        router.push("/home");
+        router.replace("/my-space");
       } else {
         if ('errors' in response) {
           setFieldErrors(response.errors);
