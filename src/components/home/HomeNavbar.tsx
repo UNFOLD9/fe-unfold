@@ -43,7 +43,6 @@ export default function HomeNavbar() {
     { name: "Pause", href: "/pause" },
     { name: "Small Wins", href: "/small-wins" },
     { name: "My Space", href: "/my-space" },
-    { name: "Support", href: "/support" },
   ];
 
   return (
