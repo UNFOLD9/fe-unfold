@@ -16,15 +16,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (cookie && isAuthRoute) {
-    return NextResponse.redirect(new URL('/home', request.url));
-  }
-
-  if (path === '/') {
-    if (cookie) {
-      return NextResponse.redirect(new URL('/home', request.url));
-    } else {
-      return NextResponse.redirect(new URL('/login', request.url));
-    }
+    return NextResponse.redirect(new URL('/my-space', request.url));
   }
 
   return NextResponse.next();
