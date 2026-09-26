@@ -102,14 +102,14 @@ export default function HomePage() {
     return (
       <div className="min-h-screen bg-[#F8F7FC] flex flex-col">
         <HomeNavbar />
-        <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 animate-pulse space-y-8">
-          <div className="h-64 bg-[#EDE9FA]/60 rounded-3xl" />
-          <div className="h-28 bg-white rounded-3xl" />
+        <div className="mx-auto w-full max-w-[1440px] flex-1 space-y-8 px-5 py-10 sm:px-10 lg:px-[88px]">
+          <div className="h-64 animate-pulse rounded-[24px] bg-[#EDE9FA]/60" />
+          <div className="h-28 animate-pulse rounded-[24px] bg-white" />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="h-80 bg-white rounded-3xl" />
+            <div className="h-80 animate-pulse rounded-[24px] bg-white" />
             <div className="space-y-6">
-              <div className="h-36 bg-white rounded-3xl" />
-              <div className="h-36 bg-white rounded-3xl" />
+              <div className="h-36 animate-pulse rounded-[24px] bg-white" />
+              <div className="h-36 animate-pulse rounded-[24px] bg-white" />
             </div>
           </div>
         </div>
@@ -124,10 +124,10 @@ export default function HomePage() {
       {/* Top Navigation */}
       <HomeNavbar />
 
-      <main className="flex-1 pb-16">
+      <main className="flex-1 pb-[72px]">
         {/* ── 1. Hero Greeting Banner ── */}
-        <section className="bg-[#F0ECFA] border-b border-[#E8E5F0]/60 py-10 sm:py-14">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="border-b border-[#E8E5F0] bg-[#F2EDFF] py-12 sm:py-16">
+          <div className="mx-auto max-w-[1440px] px-5 sm:px-10 lg:px-[88px]">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               {/* Left Copy & CTA */}
               <div className="lg:col-span-7 space-y-4 text-left">
@@ -135,7 +135,7 @@ export default function HomePage() {
                   Hai, {userName}.
                 </span>
                 
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#25233A] tracking-tight leading-tight">
+                <h1 className="text-[clamp(2.25rem,4vw,3rem)] font-extrabold leading-[1.2] tracking-[-0.045em] text-[#25233A]">
                   Apa yang kamu butuhkan hari ini?
                 </h1>
 
@@ -146,7 +146,7 @@ export default function HomePage() {
                 <div className="pt-3">
                   <Link
                     href="/pause"
-                    className="inline-block px-7 py-3.5 rounded-xl bg-[#5B8DEF] hover:bg-[#4a7de0] text-white font-semibold text-sm sm:text-base shadow-sm hover:shadow-md transition-all active:scale-95"
+                    className="inline-flex min-h-12 items-center justify-center rounded-[15px] bg-[#5B8DEF] px-6 text-sm font-semibold text-white transition-colors hover:bg-[#4F80DF] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#5B8DEF] sm:text-base"
                   >
                     Check-in sekarang
                   </Link>
@@ -155,7 +155,7 @@ export default function HomePage() {
 
               {/* Right Illustration Card (Desktop only) */}
               <div className="hidden lg:block lg:col-span-5">
-                <div className="bg-white rounded-3xl p-7 border border-[#E8E5F0] shadow-sm flex flex-col justify-between h-[210px]">
+                <div className="flex h-[210px] flex-col justify-between rounded-[24px] border border-[#E8E5F0] bg-white p-7">
                   <h2 className="text-base font-bold text-[#25233A]">
                     Mulai dari yang paling ringan.
                   </h2>
@@ -169,7 +169,7 @@ export default function HomePage() {
         </section>
 
         {/* Content Container */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 space-y-12">
+        <div className="mx-auto mt-12 max-w-[1440px] space-y-14 px-5 sm:px-10 lg:px-[88px]">
           
           {/* ── 2. Check-in Terbaru Section ── */}
           <section className="space-y-4">
@@ -178,7 +178,7 @@ export default function HomePage() {
             </h2>
 
             {loadingCheckIn ? (
-              <div className="bg-white rounded-3xl p-6 border border-[#E8E5F0] animate-pulse h-24 flex items-center gap-4">
+              <div className="flex h-24 animate-pulse items-center gap-4 rounded-[24px] border border-[#E8E5F0] bg-white p-6">
                 <div className="w-12 h-12 rounded-full bg-[#EDE9FA]" />
                 <div className="space-y-2 flex-1">
                   <div className="h-4 bg-[#EDE9FA] rounded w-1/4" />
@@ -190,7 +190,7 @@ export default function HomePage() {
               (() => {
                 const moodInfo = getMoodDetails(latestCheckIn.mood);
                 return (
-                  <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#E8E5F0] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:border-[#6F6B80]/30">
+                  <div className="flex flex-col justify-between gap-4 rounded-[24px] border border-[#E8E5F0] bg-white p-6 transition-colors hover:border-[#5B8DEF] sm:flex-row sm:items-center sm:p-7">
                     <div className="flex items-center gap-4">
                       <div
                         className={`w-12 h-12 rounded-full ${moodInfo.bg} flex items-center justify-center text-2xl shrink-0`}
@@ -223,7 +223,7 @@ export default function HomePage() {
               })()
             ) : (
               /* State: Empty Check-In (Matches Figma 1:1) */
-              <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#E8E5F0] shadow-xs flex items-center gap-4">
+              <div className="flex items-center gap-4 rounded-[24px] border border-[#E8E5F0] bg-white p-6 sm:p-7">
                 {/* Neutral Face Icon */}
                 <div className="w-12 h-12 rounded-full bg-[#EDE9FA] flex items-center justify-center text-[#25233A] shrink-0">
                   <svg
@@ -272,7 +272,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               
               {/* Card 1 (Large / Left): PAUSE / Check-in emosi */}
-              <div className="lg:col-span-6 bg-[#A284F6] rounded-3xl p-7 sm:p-9 flex flex-col justify-between transition-transform duration-200 hover:scale-[1.01] shadow-sm relative overflow-hidden group">
+              <div className="group relative flex flex-col justify-between overflow-hidden rounded-[24px] bg-[#A78BFA] p-7 sm:p-9 lg:col-span-6">
                 <div>
                   <span className="text-xs font-extrabold uppercase tracking-widest text-[#25233A]/70">
                     PAUSE
@@ -309,7 +309,7 @@ export default function HomePage() {
               <div className="lg:col-span-6 flex flex-col gap-6">
                 
                 {/* Card 2: UNLOAD / Tuangkan isi pikiran */}
-                <div className="flex-1 bg-[#FFA877] rounded-3xl p-7 sm:p-8 flex flex-col justify-between transition-transform duration-200 hover:scale-[1.01] shadow-sm group">
+                <div className="group flex flex-1 flex-col justify-between rounded-[24px] bg-[#FFB38A] p-7 sm:p-8">
                   <div>
                     <span className="text-xs font-extrabold uppercase tracking-widest text-[#25233A]/70">
                       UNLOAD
@@ -335,7 +335,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Card 3: DISCOVER / Catat kemenangan kecil */}
-                <div className="flex-1 bg-[#F9D669] rounded-3xl p-7 sm:p-8 flex flex-col justify-between transition-transform duration-200 hover:scale-[1.01] shadow-sm group">
+                <div className="group flex flex-1 flex-col justify-between rounded-[24px] bg-[#F6D66B] p-7 sm:p-8">
                   <div>
                     <span className="text-xs font-extrabold uppercase tracking-widest text-[#25233A]/70">
                       DISCOVER
@@ -366,7 +366,7 @@ export default function HomePage() {
 
           {/* ── 4. Semua Refleksimu, di Satu Tempat Card ── */}
           <section>
-            <div className="bg-[#EAF9F2] rounded-3xl p-7 sm:p-10 border border-[#7DD3B0]/30 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div className="flex flex-col items-start justify-between gap-6 rounded-[24px] bg-[#7DD3B0] p-7 sm:flex-row sm:items-center sm:p-10">
               <div className="space-y-1">
                 <h2 className="text-xl sm:text-2xl font-bold text-[#25233A]">
                   Semua refleksimu, di satu tempat.
@@ -378,7 +378,7 @@ export default function HomePage() {
 
               <Link
                 href="/my-space"
-                className="px-6 py-3 rounded-xl bg-[#5B8DEF] hover:bg-[#4a7de0] text-white font-semibold text-sm transition-all shadow-xs active:scale-95 shrink-0"
+                className="inline-flex min-h-12 shrink-0 items-center justify-center rounded-[15px] bg-[#25233A] px-6 text-sm font-semibold text-white transition-colors hover:bg-[#343149] focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-[#25233A]"
               >
                 Buka My Space
               </Link>
@@ -389,10 +389,10 @@ export default function HomePage() {
       </main>
 
       {/* ── 5. Simple Footer Bar ── */}
-      <footer className="border-t border-[#E8E5F0] bg-white py-6">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#6F6B80]">
-          <p>UNFOLD bukan layanan diagnosis atau terapi.</p>
-          <Link href="/support" className="text-[#5B8DEF] hover:underline font-medium">
+      <footer className="bg-[#25233A] px-5 py-8 text-white sm:px-10 lg:px-[88px]">
+        <div className="mx-auto flex max-w-[1264px] flex-col gap-3 text-xs text-white/65 sm:flex-row sm:items-center sm:justify-between">
+          <p>© 2026 UNFOLD · Bukan layanan diagnosis atau terapi.</p>
+          <Link href="/support" className="inline-flex min-h-11 items-center font-semibold text-white/80 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#7DD3B0]">
             Dukungan
           </Link>
         </div>
