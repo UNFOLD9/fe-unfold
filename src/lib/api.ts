@@ -5,8 +5,11 @@ const defaultHeaders = {
 };
 
 async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
-  const url = `${BASE_URL}${endpoint}`;
-  const response = await fetch(url, {
+  if (!BASE_URL) {
+    throw new Error('Konfigurasi API belum tersedia.');
+  }
+
+  const response = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
     credentials: 'include',
     headers: {
@@ -14,10 +17,9 @@ async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
       ...options.headers,
     },
   });
-  
+
   try {
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch {
     if (!response.ok) {
       throw new Error(`API Error: ${response.status} ${response.statusText}`);
