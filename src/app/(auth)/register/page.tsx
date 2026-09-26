@@ -60,7 +60,7 @@ export default function RegisterPage() {
     try {
       const response = await register({ name, email, password });
       if (response.success) {
-        router.replace("/my-space");
+        router.replace("/home");
       } else {
         if ('errors' in response) {
           setFieldErrors(response.errors);

@@ -16,7 +16,7 @@ export function middleware(request: NextRequest) {
   }
 
   if (cookie && isAuthRoute) {
-    return NextResponse.redirect(new URL('/my-space', request.url));
+    return NextResponse.redirect(new URL('/home', request.url));
   }
 
   return NextResponse.next();

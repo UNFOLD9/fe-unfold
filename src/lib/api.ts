@@ -1,15 +1,9 @@
-export const BASE_URL = process.env.NEXT_PUBLIC_API?.replace(/\/$/, '');
-
 const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
 async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
-  if (!BASE_URL) {
-    throw new Error('Konfigurasi API belum tersedia.');
-  }
-
-  const response = await fetch(`${BASE_URL}${endpoint}`, {
+  const response = await fetch(endpoint, {
     ...options,
     credentials: 'include',
     headers: {
