@@ -1,208 +1,95 @@
-'use client';
-
 import Link from 'next/link';
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  CaretDown,
+  House,
+  LockKey,
+} from '@phosphor-icons/react/dist/ssr';
+import SupportHeader from '@/app/_components/support-header';
 
-// Data kartu dukungan — masing-masing punya warna & background sendiri
-const supportCards = [
+const questions = [
   {
-    dot:       '#7DD3B0',   // hijau solid
-    bg:        '#E6F7F1',   // mint hijau terang (sesuai Figma card 1 & 3)
-    border:    '#C5EBE0',
-    title:     'Layanan kampus',
-    desc:      'Cari informasi konseling atau pendampingan resmi dari kampusmu.',
-    cta:       'Lihat informasi kampus',
-    ctaBg:     '#FFFFFF',
-    ctaBorder: '#C5EBE0',
+    title: 'Apa fungsi UNFOLD?',
+    answer:
+      'UNFOLD membantu kamu mencatat check-in emosi, menulis isi pikiran, dan menyimpan small wins. Aplikasi ini bukan alat diagnosis atau pengganti tenaga profesional.',
   },
   {
-    dot:       '#A78BFA',   // ungu/lavender solid
-    bg:        '#EDE9FA',   // lavender terang (sesuai Figma card 2)
-    border:    '#D4CCEF',
-    title:     'Profesional terverifikasi',
-    desc:      'Pertimbangkan psikolog atau konselor melalui layanan kesehatan jiwa yang aman.',
-    cta:       'Cari layanan resmi',
-    ctaBg:     '#FFFFFF',
-    ctaBorder: '#D4CCEF',
+    title: 'Kenapa aku kembali ke halaman masuk?',
+    answer:
+      'Sesi masuk bisa berakhir setelah waktu tertentu atau saat cookie dihapus. Masuk kembali untuk membuka data di My Space.',
   },
   {
-    dot:       '#7DD3B0',   // hijau solid (sama dengan card 1)
-    bg:        '#E6F7F1',   // mint hijau terang (sama dengan card 1)
-    border:    '#C5EBE0',
-    title:     'Orang yang kamu percaya',
-    desc:      'Bicarakan kondisimu dengan teman, keluarga, atau dosen yang aman.',
-    cta:       'Rencanakan percakapan',
-    ctaBg:     '#FFFFFF',
-    ctaBorder: '#C5EBE0',
+    title: 'Siapa yang bisa melihat catatanku?',
+    answer:
+      'Catatan terhubung ke akunmu dan hanya dimuat setelah autentikasi. Jangan bagikan kata sandi atau token sesi kepada siapa pun.',
   },
-];
-
-
-const smallSteps = [
-  'Tarik napas perlahan dan duduk di tempat yang terasa aman.',
-  'Kirim pesan singkat kepada satu orang yang kamu percaya.',
-  'Tunda keputusan besar sampai kondisimu lebih stabil.',
+  {
+    title: 'Bagaimana menghapus catatan?',
+    answer:
+      'Buka My Space, pilih catatan yang ingin dihapus, lalu konfirmasi. Penghapusan bersifat permanen.',
+  },
 ];
 
 export default function SupportPage() {
   return (
-    <div style={{ backgroundColor: '#F8F7FC', minHeight: '100vh' }}>
+    <main className="min-h-screen bg-[#F8F7FC] text-[#25233A]">
+      <SupportHeader />
 
-      {/* ── Hero — lavender ── */}
-      <div style={{ backgroundColor: '#EDE9FA' }}>
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 relative overflow-hidden">
-          {/* Lingkaran hijau dekorasi — kanan atas */}
-          <div
-            className="absolute rounded-full"
-            style={{
-              width: 80, height: 80,
-              backgroundColor: '#7DD3B0',
-              right: 40, top: 24,
-            }}
-          />
-          <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: '#7B6FAA' }}>
-            SUPPORT
-          </p>
-          <h1
-            className="text-2xl sm:text-3xl font-bold leading-snug mb-2"
-            style={{ color: '#25233A', maxWidth: 440 }}
-          >
-            Kamu tidak harus menghadapi semuanya sendiri.
-          </h1>
-          <p className="text-sm" style={{ color: '#6F6B80' }}>
-            Temukan pilihan dukungan yang aman dan sesuai kebutuhanmu.
-          </p>
-        </div>
-      </div>
-
-      {/* ── Konten utama ── */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6" style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
-
-        {/* ── Disclaimer ── */}
-        <div
-          className="rounded-2xl p-4 sm:p-5"
-          style={{ backgroundColor: '#FFFFFF', border: '1px solid #E8E5F0', display: 'flex', gap: 16, alignItems: 'flex-start' }}
-        >
-          {/* Dot biru — 20px sesuai Figma */}
-          <span
-            className="shrink-0"
-            style={{ width: 20, height: 20, borderRadius: '50%', backgroundColor: '#5B8DEF', marginTop: 2, display: 'block' }}
-          />
+      <section className="overflow-hidden border-b border-[#E8E5F0] bg-[#EEEAFB]">
+        <div className="mx-auto max-w-5xl px-5 py-8 sm:px-8 sm:py-10">
           <div>
-            <p className="font-semibold text-sm mb-1" style={{ color: '#25233A' }}>
-              UNFOLD adalah ruang refleksi, bukan layanan terapi
-            </p>
-            <p className="text-sm leading-relaxed" style={{ color: '#6F6B80' }}>
-              UNFOLD tidak memberikan diagnosis atau menyarankan tindakan profesional.
-              Gunakan aplikasi ini untuk memahami dan memperkuat perasaan dan perkembangan pribadimu.
+            <h1 className="max-w-2xl text-3xl font-bold leading-tight tracking-[-0.03em] sm:text-4xl">
+              Pelan-pelan, kita cari jalan keluarnya.
+            </h1>
+            <p className="mt-3 max-w-xl text-base leading-7 text-[#6F6B80] sm:text-lg">
+              Jawaban untuk akun, catatan refleksi, dan perjalananmu di UNFOLD.
             </p>
           </div>
         </div>
+      </section>
 
-        {/* ── Pilih dukungan ── */}
-        <div>
-          <h2 className="font-semibold text-base mb-1" style={{ color: '#25233A' }}>
-            Pilih dukungan yang terasa paling memungkinkan
-          </h2>
-          <p className="text-sm mb-4" style={{ color: '#6F6B80' }}>
-            Kamu bisa memulai dari langkah yang paling ringan.
-          </p>
+      <div className="mx-auto grid max-w-5xl gap-8 px-5 py-8 sm:px-8 sm:py-10 lg:grid-cols-[.78fr_1.22fr]">
+        <aside className="h-fit rounded-3xl border border-[#E8E5F0] bg-white p-5 sm:p-6 lg:sticky lg:top-6">
+          <h2 className="text-lg font-bold">Bantuan cepat</h2>
+          <nav className="mt-4 space-y-2" aria-label="Jalur cepat bantuan">
+            <Link href="/home" className="group flex min-h-12 items-center justify-between rounded-2xl px-3 py-2 text-sm font-semibold transition-colors hover:bg-[#F0F4FF] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5B8DEF]">
+              <span className="flex items-center gap-3"><House size={20} className="text-[#5B8DEF]" aria-hidden="true" />Mulai check-in</span>
+              <ArrowUpRight size={18} className="text-[#9A94AA] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+            </Link>
+            <Link href="/my-space" className="group flex min-h-12 items-center justify-between rounded-2xl px-3 py-2 text-sm font-semibold transition-colors hover:bg-[#EEF9F5] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5B8DEF]">
+              <span className="flex items-center gap-3"><LockKey size={20} className="text-[#4A8C6F]" aria-hidden="true" />Buka My Space</span>
+              <ArrowUpRight size={18} className="text-[#9A94AA] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+            </Link>
+            <Link href="/login" className="group flex min-h-12 items-center justify-between rounded-2xl px-3 py-2 text-sm font-semibold transition-colors hover:bg-[#FFF4EE] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5B8DEF]">
+              <span className="flex items-center gap-3"><ArrowLeft size={20} className="text-[#E28D5E]" aria-hidden="true" />Kembali masuk</span>
+              <ArrowUpRight size={18} className="text-[#9A94AA] transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+            </Link>
+          </nav>
+          <div className="mt-6 border-t border-[#E8E5F0] pt-5">
+            <p className="text-sm leading-6 text-[#6F6B80]">UNFOLD adalah ruang refleksi. Untuk kondisi darurat, hubungi layanan darurat resmi di wilayahmu.</p>
+          </div>
+        </aside>
 
-          {/* 3 kartu — stacked mobile, row desktop */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            {supportCards.map(({ dot, bg, border, title, desc, cta, ctaBg, ctaBorder }) => (
-              <div
-                key={title}
-                className="flex-1 rounded-2xl p-4 sm:p-5"
-                style={{
-                  backgroundColor: bg,
-                  border: `1px solid ${border}`,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 10,
-                }}
-              >
-                {/* Dot — 20px solid circle sesuai Figma */}
-                <span
-                  style={{
-                    width: 20, height: 20,
-                    borderRadius: '50%',
-                    backgroundColor: dot,
-                    display: 'block',
-                    flexShrink: 0,
-                  }}
-                />
-                <h3 className="font-semibold text-sm" style={{ color: '#25233A' }}>{title}</h3>
-                <p className="text-sm leading-relaxed flex-1" style={{ color: '#6F6B80', fontSize: 13 }}>{desc}</p>
-                <button
-                  className="text-xs font-medium rounded-xl transition-colors hover:opacity-80"
-                  style={{
-                    backgroundColor: ctaBg,
-                    color: '#25233A',
-                    border: `1px solid ${ctaBorder}`,
-                    padding: '6px 12px',
-                    textAlign: 'left',
-                  }}
-                >
-                  {cta}
-                </button>
-              </div>
+        <section aria-labelledby="faq-title">
+          <h2 id="faq-title" className="text-2xl font-bold tracking-[-0.02em] sm:text-3xl">Pertanyaan umum</h2>
+          <div className="mt-6 divide-y divide-[#E8E5F0] overflow-hidden rounded-3xl border border-[#E8E5F0] bg-white">
+            {questions.map((question) => (
+              <details key={question.title} className="group px-5 sm:px-6">
+                <summary className="flex min-h-16 cursor-pointer list-none items-center justify-between gap-4 py-4 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5B8DEF] [&::-webkit-details-marker]:hidden">
+                  {question.title}
+                  <CaretDown size={19} className="shrink-0 text-[#9A94AA] transition-transform group-open:rotate-180" aria-hidden="true" />
+                </summary>
+                <p className="max-w-2xl pb-5 pr-7 text-sm leading-6 text-[#6F6B80]">{question.answer}</p>
+              </details>
             ))}
           </div>
-        </div>
-
-        {/* ── Emergency — merah muda ── */}
-        <div
-          className="rounded-2xl p-4 sm:p-5"
-          style={{ backgroundColor: '#FFF0F0', border: '1px solid #FECDCD' }}
-        >
-          <h2 className="font-semibold text-sm mb-1.5" style={{ color: '#C53030' }}>
-            Jika kamu merasa tidak aman sekarang
-          </h2>
-          <p className="text-sm leading-relaxed mb-3" style={{ color: '#4A1212' }}>
-            Segera hubungi layanan darurat resmi di wilayahmu atau datangi fasilitas kesehatan
-            terdekat. Jika memungkinkan, tetap bersama orang yang kamu percaya.
-          </p>
-          <a
-            href="https://www.kemkes.go.id"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-sm font-semibold transition-opacity hover:opacity-70"
-            style={{ color: '#E53E3E' }}
-          >
-            Cari layanan darurat resmi
-          </a>
-        </div>
-
-        {/* ── Langkah kecil ── */}
-        <div>
-          <h2 className="font-semibold text-base mb-3" style={{ color: '#25233A' }}>
-            Langkah kecil untuk saat ini
-          </h2>
-          {/* 3 kotak — stacked mobile, row desktop */}
-          <div className="flex flex-col sm:flex-row gap-3">
-            {smallSteps.map((tip, i) => (
-              <div
-                key={i}
-                className="flex-1 rounded-2xl p-4"
-                style={{ backgroundColor: '#E6F7F1', border: '1px solid #C5EBE0' }}
-              >
-                <p className="text-sm leading-relaxed" style={{ color: '#25233A', fontSize: 13 }}>{tip}</p>
-              </div>
-            ))}
+          <div className="mt-6 rounded-3xl border border-[#C5EBE0] bg-[#EAF8F3] p-5 sm:p-6">
+            <p className="text-sm font-semibold text-[#28684E]">Masih belum menemukan yang kamu cari?</p>
+            <p className="mt-2 text-sm leading-6 text-[#3E6758]">Catat halaman dan langkah terakhir yang kamu lakukan. Detail itu membantu saat masalah perlu ditelusuri lebih lanjut.</p>
           </div>
-        </div>
-
-        {/* ── Footer ── */}
-        <div className="flex items-center justify-between py-2">
-          <p className="text-xs" style={{ color: '#9CA3AF' }}>
-            UNFOLD bukan layanan diagnosis atau terapi
-          </p>
-          <Link href="/support" className="text-xs" style={{ color: '#5B8DEF' }}>
-            Dukungan
-          </Link>
-        </div>
-
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
