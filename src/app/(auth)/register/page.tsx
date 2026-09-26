@@ -4,7 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import { Eye, EyeClosed, CircleNotch } from "@phosphor-icons/react";
+import { CircleNotch, Eye, EyeClosed } from "@phosphor-icons/react";
+import FormError from "@/app/_components/form-error";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -62,14 +63,14 @@ export default function RegisterPage() {
         router.push("/home");
       } else {
         if ('errors' in response) {
-          setFieldErrors(response.errors as any);
+          setFieldErrors(response.errors);
         }
         if (response.message) {
           setError(response.message);
         }
       }
-    } catch (err: any) {
-      setError(err.message || "Terjadi kesalahan saat mendaftar. Silakan coba lagi.");
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Terjadi kesalahan saat mendaftar. Silakan coba lagi.");
     } finally {
       setIsLoading(false);
     }
@@ -88,12 +89,7 @@ export default function RegisterPage() {
       </div>
 
       {/* Error Alert */}
-      {error && (
-        <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-100 text-red-600 text-sm flex items-start gap-2">
-          <span>⚠️</span>
-          <p>{error}</p>
-        </div>
-      )}
+      {error && <FormError message={error} />}
 
       {/* Form */}
       <form onSubmit={handleSubmit} className="space-y-5">

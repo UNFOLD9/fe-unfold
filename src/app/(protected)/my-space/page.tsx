@@ -7,6 +7,7 @@ import { apiGet, apiDelete } from '@/lib/api';
 import type { EmotionalCheckIn, MindEntry, SmallWin, ApiResponse } from '@/types';
 import { useToast, ToastContainer } from '@/components/Toast';
 import { ArrowRight, Trash, ArrowCounterClockwise } from '@phosphor-icons/react';
+import DeleteDialog from '@/app/_components/delete-dialog';
 
 // ── Emotion config ────────────────────────────────────────────────────────────
 const emotionConf: Record<string, { label: string; color: string }> = {
@@ -27,41 +28,6 @@ function fmtDate(d: string) {
 }
 
 // ── Delete Dialog ─────────────────────────────────────────────────────────────
-function DeleteDialog({
-  label, date, onConfirm, onCancel, loading,
-}: {
-  label: string; date: string;
-  onConfirm: () => void; onCancel: () => void; loading: boolean;
-}) {
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(37,35,58,0.3)', backdropFilter: 'blur(4px)' }} onClick={onCancel} />
-      <div className="relative rounded-2xl p-6 w-full max-w-xs shadow-2xl" style={{ backgroundColor: '#FFFFFF' }}>
-        <h3 className="font-bold text-base mb-1" style={{ color: '#25233A' }}>
-          Hapus {label}?
-        </h3>
-        <p className="text-sm mb-1" style={{ color: '#6F6B80' }}>
-          {date} akan dihapus permanen dari My Space.
-        </p>
-        <p className="text-xs font-semibold" style={{ color: '#F87171' }}>Tindakan permanen</p>
-        <p className="text-xs mb-5" style={{ color: '#9CA3AF' }}>Sekali hapus tidak bisa diambil kembali.</p>
-        <div className="flex gap-3">
-          <button onClick={onCancel}
-            className="flex-1 py-2.5 rounded-xl text-sm font-medium border"
-            style={{ color: '#6F6B80', borderColor: '#E8E5F0', backgroundColor: '#F8F7FC' }}>
-            Batal
-          </button>
-          <button onClick={onConfirm} disabled={loading}
-            className="flex-1 py-2.5 rounded-xl text-sm font-medium disabled:opacity-60"
-            style={{ backgroundColor: '#F87171', color: '#FFFFFF' }}>
-            {loading ? 'Menghapus...' : `Hapus ${label}`}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 type DelTarget = { id: string; type: 'ci' | 'me' | 'sw'; label: string; date: string };
 
 // ── Page ──────────────────────────────────────────────────────────────────────
