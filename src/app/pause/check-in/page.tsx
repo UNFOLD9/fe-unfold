@@ -13,12 +13,17 @@ import {
 } from "@/components/pause/EmotionIcon";
 import IntensityStepper from "@/components/pause/IntensityStepper";
 import CheckInSuccess from "@/components/pause/CheckInSuccess";
+import CheckInLoading from "@/components/pause/CheckInLoading";
+import {
+  CreateEmotionalCheckInInput,
+  EmotionalCheckInSuccess,
+} from "@/types/checkin";
 
 export default function EmotionalCheckInPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
 
-  const [selectedEmotion, setSelectedEmotion] = useState<EmotionType>("tenang");
+  const [selectedEmotion, setSelectedEmotion] = useState<EmotionType>("calm");
   const [intensity, setIntensity] = useState<number>(3);
   const [notes, setNotes] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -39,33 +44,33 @@ export default function EmotionalCheckInPage() {
     setIsSubmitting(true);
     setError(null);
 
-    const emotionObj = EMOTIONS.find((e) => e.id === selectedEmotion);
-    const emotionName = emotionObj ? emotionObj.label : selectedEmotion;
-
     try {
-      const payload = {
-        mood: emotionName.toLowerCase(),
+      const payload: CreateEmotionalCheckInInput = {
+        emotion: selectedEmotion,
         intensity: intensity,
-        energyLevel: intensity,
-        notes: notes.trim() || undefined,
-        note: notes.trim() || undefined,
+        triggerNote: notes.trim() || undefined,
       };
 
-      const res = (await apiPost("/api/check-ins", payload)) as {
-        success?: boolean;
-        message?: string;
-      };
+      const res = (await apiPost(
+        "/api/emotional-check-ins",
+        payload
+      )) as EmotionalCheckInSuccess;
+
+      // Small delay for smooth state transition
+      await new Promise((resolve) => setTimeout(resolve, 800));
 
       if (res && res.success !== false) {
         setIsSuccess(true);
       } else {
         setError(
-          res?.message || "Gagal menyimpan check-in. Silakan coba lagi."
+          (res as any)?.message ||
+            "Gagal menyimpan check-in. Silakan coba lagi."
         );
       }
     } catch (err: unknown) {
       console.error("Check-in error:", err);
-      // Fallback success for preview/development if backend is offline or mock
+      // Fallback transition for demo
+      await new Promise((resolve) => setTimeout(resolve, 800));
       setIsSuccess(true);
     } finally {
       setIsSubmitting(false);
@@ -108,11 +113,16 @@ export default function EmotionalCheckInPage() {
           </div>
         </section>
 
-        {/* ── 2. Content Form or Success Modal ── */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-4 sm:-mt-6">
-          {isSuccess ? (
+        {/* ── 2. Content Form, Loading State, or Success Modal ── */}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-10">
+          {isSubmitting ? (
+            /* ── State / Loading Screen (Figma 1:1) ── */
+            <div className="pt-2">
+              <CheckInLoading />
+            </div>
+          ) : isSuccess ? (
             /* ── Success Screen (Figma 1:1) ── */
-            <div className="pt-6">
+            <div>
               <CheckInSuccess
                 emotionLabel={currentEmotionLabel}
                 intensity={intensity}
@@ -208,6 +218,7 @@ export default function EmotionalCheckInPage() {
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Tulis singkat bila kamu ingin memberi konteks..."
                     rows={4}
+                    maxLength={1000}
                     disabled={isSubmitting}
                     className="w-full px-4 py-3.5 rounded-2xl border border-[#E8E5F0] bg-[#F8F7FC] text-sm text-[#25233A] placeholder-[#6F6B80]/60 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#5B8DEF]/20 focus:border-[#5B8DEF] transition-all resize-none"
                   />
@@ -224,33 +235,7 @@ export default function EmotionalCheckInPage() {
                     disabled={isSubmitting}
                     className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-[#5B8DEF] hover:bg-[#4a7de0] disabled:opacity-60 disabled:pointer-events-none text-white font-semibold text-sm sm:text-base shadow-sm hover:shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                   >
-                    {isSubmitting ? (
-                      <>
-                        <svg
-                          className="animate-spin h-4 w-4 text-white"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                        >
-                          <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                          />
-                          <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                          />
-                        </svg>
-                        <span>Menyimpan...</span>
-                      </>
-                    ) : (
-                      "Simpan check-in"
-                    )}
+                    Simpan check-in
                   </button>
                 </div>
               </form>
