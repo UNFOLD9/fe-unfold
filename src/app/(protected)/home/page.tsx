@@ -7,24 +7,24 @@ import { useAuth } from "@/context/AuthContext";
 import { apiGet } from "@/lib/api";
 import HomeNavbar from "@/components/home/HomeNavbar";
 import WaveIllustration from "@/components/home/WaveIllustration";
-import { CheckInItem, LatestCheckInResponse } from "@/types/checkin";
+import type { EmotionalCheckIn, EmotionalCheckInListSuccess } from "@/types/checkin";
 
 export default function HomePage() {
   const { user, loading: authLoading } = useAuth();
   
-  const [latestCheckIn, setLatestCheckIn] = useState<CheckInItem | null>(null);
+  const [latestCheckIn, setLatestCheckIn] = useState<EmotionalCheckIn | null>(null);
   const [loadingCheckIn, setLoadingCheckIn] = useState(true);
 
-  // Fetch latest check-in data from GET /api/check-ins/latest
+  // Backend returns check-ins newest first.
   useEffect(() => {
     let isMounted = true;
 
     async function fetchLatestCheckIn() {
       try {
-        const res = (await apiGet("/api/check-ins/latest")) as LatestCheckInResponse;
+        const res = (await apiGet("/api/emotional-check-ins")) as EmotionalCheckInListSuccess;
         if (isMounted) {
-          if (res && res.success && res.data) {
-            setLatestCheckIn(res.data);
+          if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+            setLatestCheckIn(res.data[0]);
           } else {
             setLatestCheckIn(null);
           }
@@ -182,7 +182,7 @@ export default function HomePage() {
             ) : latestCheckIn ? (
               /* State: Has Latest Check-In */
               (() => {
-                const moodInfo = getMoodDetails(latestCheckIn.mood);
+                const moodInfo = getMoodDetails(latestCheckIn.emotion);
                 return (
                   <div className="flex flex-col justify-between gap-4 rounded-[24px] border border-[#E8E5F0] bg-white p-6 transition-colors hover:border-[#5B8DEF] sm:flex-row sm:items-center sm:p-7">
                     <div className="flex items-center gap-4">
@@ -201,7 +201,7 @@ export default function HomePage() {
                           </span>
                         </div>
                         <p className="text-xs sm:text-sm text-[#6F6B80] mt-1 line-clamp-1">
-                          {latestCheckIn.notes || latestCheckIn.note || latestCheckIn.reflection || latestCheckIn.summary || "Kamu telah menyelesaikan check-in hari ini."}
+                          {latestCheckIn.triggerNote || "Kamu telah menyelesaikan check-in hari ini."}
                         </p>
                       </div>
                     </div>
