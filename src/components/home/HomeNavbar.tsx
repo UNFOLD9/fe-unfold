@@ -40,7 +40,7 @@ export default function HomeNavbar() {
 
   const navLinks = [
     { name: "Home", href: "/home" },
-    { name: "Pause", href: "/pause" },
+    { name: "Unload", href: "/unload" },
     { name: "Small Wins", href: "/small-wins" },
     { name: "My Space", href: "/my-space" },
     { name: "Support", href: "/support" },
