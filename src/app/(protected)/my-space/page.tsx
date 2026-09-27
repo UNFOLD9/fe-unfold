@@ -160,16 +160,16 @@ export default function MySpacePage() {
             <div className="rounded-[22px] p-5 sm:p-5.5 bg-[#F0EEFC] border border-[#E6E0F8] transition-transform hover:-translate-y-0.5">
               <p className="text-xs font-semibold text-[#6F6B80] mb-1">Check-in</p>
               <p className="text-3xl sm:text-4xl font-extrabold text-[#9A8CF6] leading-none mb-1.5">
-                4
+                {checkIns.length}
               </p>
-              <p className="text-xs text-[#9A94AA]">bulan ini</p>
+              <p className="text-xs text-[#9A94AA]">total check-in</p>
             </div>
 
             {/* Tulisan tersimpan Summary */}
             <div className="rounded-[22px] p-5 sm:p-5.5 bg-[#FFF1EB] border border-[#FDE5D9] transition-transform hover:-translate-y-0.5">
               <p className="text-xs font-semibold text-[#6F6B80] mb-1">Tulisan tersimpan</p>
               <p className="text-3xl sm:text-4xl font-extrabold text-[#FFA87E] leading-none mb-1.5">
-                2
+                {mindEntries.length}
               </p>
               <p className="text-xs text-[#9A94AA]">refleksi pribadi</p>
             </div>
@@ -178,7 +178,7 @@ export default function MySpacePage() {
             <div className="rounded-[22px] p-5 sm:p-5.5 bg-[#EDFAF4] border border-[#DCF4EA] transition-transform hover:-translate-y-0.5">
               <p className="text-xs font-semibold text-[#6F6B80] mb-1">Small wins</p>
               <p className="text-3xl sm:text-4xl font-extrabold text-[#45C992] leading-none mb-1.5">
-                3
+                {smallWins.length}
               </p>
               <p className="text-xs text-[#9A94AA]">layak dirayakan</p>
             </div>
