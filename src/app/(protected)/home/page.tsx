@@ -268,11 +268,7 @@ export default function HomePage() {
               {/* Card 1 (Large / Left): PAUSE / Check-in emosi */}
               <div className="group relative flex flex-col justify-between overflow-hidden rounded-[24px] bg-[#A78BFA] p-7 sm:p-9 lg:col-span-6">
                 <div>
-                  <span className="text-xs font-extrabold uppercase tracking-widest text-[#25233A]/70">
-                    PAUSE
-                  </span>
-                  
-                  <h3 className="text-2xl sm:text-3xl font-bold text-[#25233A] mt-2 mb-2">
+                  <h3 className="text-2xl sm:text-3xl font-bold text-[#25233A] mb-2">
                     Check-in emosi
                   </h3>
                   
@@ -305,11 +301,7 @@ export default function HomePage() {
                 {/* Card 2: UNLOAD / Tuangkan isi pikiran */}
                 <div className="group flex flex-1 flex-col justify-between rounded-[24px] bg-[#FFB38A] p-7 sm:p-8">
                   <div>
-                    <span className="text-xs font-extrabold uppercase tracking-widest text-[#25233A]/70">
-                      UNLOAD
-                    </span>
-                    
-                    <h3 className="text-xl sm:text-2xl font-bold text-[#25233A] mt-2 mb-2">
+                    <h3 className="text-xl sm:text-2xl font-bold text-[#25233A] mb-2">
                       Tuangkan isi pikiran
                     </h3>
                     
@@ -331,11 +323,7 @@ export default function HomePage() {
                 {/* Card 3: DISCOVER / Catat kemenangan kecil */}
                 <div className="group flex flex-1 flex-col justify-between rounded-[24px] bg-[#F6D66B] p-7 sm:p-8">
                   <div>
-                    <span className="text-xs font-extrabold uppercase tracking-widest text-[#25233A]/70">
-                      DISCOVER
-                    </span>
-                    
-                    <h3 className="text-xl sm:text-2xl font-bold text-[#25233A] mt-2 mb-2">
+                    <h3 className="text-xl sm:text-2xl font-bold text-[#25233A] mb-2">
                       Catat kemenangan kecil
                     </h3>
                     

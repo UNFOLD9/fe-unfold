@@ -36,7 +36,7 @@ export default function Footer() {
 
           {/* Quick links */}
           <div className="md:col-span-3 space-y-3">
-            <h4 className="text-xs uppercase font-bold tracking-wider text-[#25233A]">
+            <h4 className="text-sm font-bold text-[#25233A]">
               Eksplorasi
             </h4>
             <ul className="space-y-2 text-sm text-[#6F6B80]">
@@ -65,7 +65,7 @@ export default function Footer() {
 
           {/* Akses Cepat */}
           <div className="md:col-span-4 space-y-3">
-            <h4 className="text-xs uppercase font-bold tracking-wider text-[#25233A]">
+            <h4 className="text-sm font-bold text-[#25233A]">
               Mulai Langkahmu
             </h4>
             <p className="text-xs text-[#6F6B80] leading-relaxed">

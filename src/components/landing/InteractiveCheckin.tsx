@@ -87,13 +87,7 @@ export default function InteractiveCheckin() {
       {/* Card container */}
       <div className="relative bg-white/90 backdrop-blur-xl border border-[#E8E5F0] rounded-3xl p-6 sm:p-8 shadow-xl shadow-[#25233A]/5 transition-all">
         {/* Card Header */}
-        <div className="flex items-center justify-between pb-5 border-b border-[#E8E5F0]/70 mb-6">
-          <div className="flex items-center gap-3">
-            <span className="w-3 h-3 rounded-full bg-[#7DD3B0] animate-pulse" />
-            <span className="text-xs font-semibold uppercase tracking-wider text-[#6F6B80]">
-              Ruang Check-In Mandiri
-            </span>
-          </div>
+        <div className="flex items-center justify-end pb-5 border-b border-[#E8E5F0]/70 mb-6">
           <span className="text-xs px-3 py-1 rounded-full bg-[#F8F7FC] text-[#6F6B80] font-medium border border-[#E8E5F0]">
             Hari ini • 3 menit
           </span>

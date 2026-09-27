@@ -176,9 +176,6 @@ export default function Features() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-          <span className="text-xs uppercase font-bold tracking-widest text-[#5B8DEF] px-3.5 py-1.5 rounded-full bg-white border border-[#E8E5F0]">
-            Fitur Utama
-          </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#25233A] tracking-tight">
             Semua yang kamu butuhkan untuk <br className="hidden sm:inline" />
             mendengarkan suaramu sendiri.

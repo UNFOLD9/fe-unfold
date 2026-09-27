@@ -43,7 +43,6 @@ export default function HomeNavbar() {
     { name: "Unload", href: "/unload" },
     { name: "Small Wins", href: "/small-wins" },
     { name: "My Space", href: "/my-space" },
-    { name: "Support", href: "/support" },
   ];
 
   return (
@@ -127,13 +126,6 @@ export default function HomeNavbar() {
                       className="block px-4 py-2 text-xs sm:text-sm text-[#25233A] hover:bg-[#F8F7FC] transition-colors"
                     >
                       Profil akun
-                    </Link>
-                    <Link
-                      href="/support"
-                      onClick={() => setDropdownOpen(false)}
-                      className="block px-4 py-2 text-xs sm:text-sm text-[#25233A] hover:bg-[#F8F7FC] transition-colors"
-                    >
-                      Bantuan & Dukungan
                     </Link>
                   </div>
 

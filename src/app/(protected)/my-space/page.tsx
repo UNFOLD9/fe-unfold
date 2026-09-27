@@ -110,9 +110,6 @@ export default function MySpacePage() {
         <div className="mx-auto max-w-5xl px-5 py-7 sm:px-8 sm:py-9">
           <div className="flex items-center justify-between gap-4">
             <div>
-              <p className="text-[11px] sm:text-xs font-bold tracking-[0.18em] uppercase text-[#4D8068] mb-1.5">
-                YOUR SPACE
-              </p>
               <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#25233A] tracking-[-0.02em] mb-1.5">
                 My Space
               </h1>

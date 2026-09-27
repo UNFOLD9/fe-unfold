@@ -54,9 +54,6 @@ export default function ProfilePage() {
       {/* ── Hero Banner (Lavender Purple) ── */}
       <section className="w-full bg-[#EDE9FA] border-b border-[#DDD8F5]">
         <div className="mx-auto max-w-5xl px-5 py-7 sm:px-8 sm:py-9">
-          <p className="text-[11px] sm:text-xs font-bold tracking-[0.18em] uppercase text-[#6C52C7] mb-1.5">
-            AKUN
-          </p>
           <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#25233A] tracking-[-0.02em] mb-1.5">
             Ruang akunmu
           </h1>

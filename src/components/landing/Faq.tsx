@@ -47,9 +47,6 @@ export default function Faq() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-16 space-y-4">
-          <span className="text-xs uppercase font-bold tracking-widest text-[#5B8DEF] px-3.5 py-1.5 rounded-full bg-[#5B8DEF]/10">
-            Pertanyaan Umum
-          </span>
           <h2 className="text-3xl sm:text-4xl font-extrabold text-[#25233A] tracking-tight">
             Semua yang perlu kamu ketahui.
           </h2>
