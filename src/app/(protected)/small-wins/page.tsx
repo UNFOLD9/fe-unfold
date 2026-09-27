@@ -6,44 +6,8 @@ import { useAuth } from '@/context/AuthContext';
 import { apiGet, apiPost, apiDelete } from '@/lib/api';
 import type { SmallWin, ApiResponse } from '@/types';
 import { useToast, ToastContainer } from '@/components/Toast';
+import { ArrowRight, Flag } from '@phosphor-icons/react';
 import HomeNavbar from '@/components/home/HomeNavbar';
-
-// ── Default Mockup Items (Matching Figma / Mockup Screenshots) ──────────────
-const initialSmallWins: (SmallWin & { dotColor?: string })[] = [
-  {
-    id: 'sw-1',
-    userId: 'u1',
-    title: 'Menyelesaikan tugas sebelum tenggat',
-    description: null,
-    category: 'Akademik',
-    winDate: '2026-09-23T10:00:00Z',
-    createdAt: '2026-09-23T10:00:00Z',
-    updatedAt: '2026-09-23T10:00:00Z',
-    dotColor: '#F5C738',
-  },
-  {
-    id: 'sw-2',
-    userId: 'u1',
-    title: 'Berani bilang tidak saat butuh istirahat',
-    description: null,
-    category: 'Diri sendiri',
-    winDate: '2026-09-21T10:00:00Z',
-    createdAt: '2026-09-21T10:00:00Z',
-    updatedAt: '2026-09-21T10:00:00Z',
-    dotColor: '#45C992',
-  },
-  {
-    id: 'sw-3',
-    userId: 'u1',
-    title: 'Menghubungi teman lebih dulu',
-    description: null,
-    category: 'Relasi',
-    winDate: '2026-09-19T10:00:00Z',
-    createdAt: '2026-09-19T10:00:00Z',
-    updatedAt: '2026-09-19T10:00:00Z',
-    dotColor: '#5B8DEF',
-  },
-];
 
 const categories = ['Akademik', 'Diri sendiri', 'Relasi', 'Kesehatan'];
 
@@ -71,10 +35,10 @@ function fmtDateLong(d: Date) {
 }
 
 export default function SmallWinsPage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { toasts, addToast, removeToast } = useToast();
 
-  const [smallWins, setSmallWins] = useState<(SmallWin & { dotColor?: string })[]>(initialSmallWins);
+  const [smallWins, setSmallWins] = useState<(SmallWin & { dotColor?: string })[]>([]);
   const [loading, setLoading] = useState(false);
 
   // Form states
@@ -99,7 +63,7 @@ export default function SmallWinsPage() {
   const fetchWins = async () => {
     try {
       const res = (await apiGet('/api/small-wins')) as ApiResponse<SmallWin[]>;
-      if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.success && Array.isArray(res.data)) {
         const enriched = res.data.map((item, idx) => ({
           ...item,
           dotColor: item.category
@@ -111,15 +75,18 @@ export default function SmallWinsPage() {
             : '#5B8DEF',
         }));
         setSmallWins(enriched);
+      } else {
+        setSmallWins([]);
       }
     } catch {
-      // Keep initial preview data on fallback
+      setSmallWins([]);
+      addToast('error', 'Gagal memuat small wins dari server.');
     }
   };
 
   useEffect(() => {
-    fetchWins();
-  }, []);
+    if (!authLoading && user) fetchWins();
+  }, [authLoading, user]);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,34 +96,27 @@ export default function SmallWinsPage() {
     }
 
     setSubmitting(true);
-    const newWin: SmallWin & { dotColor: string } = {
-      id: `sw-${Date.now()}`,
-      userId: user?.id || 'u1',
-      title: title.trim(),
-      description: notes.trim() || null,
-      category: selectedCategory,
-      winDate: selectedDate ? new Date(selectedDate).toISOString() : new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      dotColor: selectedCategory ? categoryColors[selectedCategory] ?? '#F5C738' : '#F5C738',
-    };
-
     try {
-      await apiPost('/api/small-wins', {
+      const res = await apiPost('/api/small-wins', {
         title: title.trim(),
         description: notes.trim() || null,
         category: selectedCategory,
-        winDate: selectedDate ? new Date(selectedDate).toISOString() : new Date().toISOString(),
-      });
+        winDate: selectedDate,
+      }) as ApiResponse<SmallWin>;
+      if (!res.success || !res.data) throw new Error('Gagal menyimpan small win.');
+      const newWin = {
+        ...res.data,
+        dotColor: res.data.category ? categoryColors[res.data.category] ?? '#F5C738' : '#F5C738',
+      };
+      setSmallWins((prev) => [newWin, ...prev]);
+      setTitle('');
+      setNotes('');
+      addToast('success', 'Kemenangan kecil berhasil dicatat!');
     } catch {
-      // Local addition succeeds regardless for preview
+      addToast('error', 'Gagal menyimpan small win.');
+    } finally {
+      setSubmitting(false);
     }
-
-    setSmallWins((prev) => [newWin, ...prev]);
-    setTitle('');
-    setNotes('');
-    addToast('success', 'Kemenangan kecil berhasil dicatat!');
-    setSubmitting(false);
   };
 
   const handleDelete = async () => {
@@ -165,14 +125,14 @@ export default function SmallWinsPage() {
 
     try {
       await apiDelete(`/api/small-wins/${delTarget.id}`);
+      setSmallWins((prev) => prev.filter((w) => w.id !== delTarget.id));
+      addToast('success', 'Kemenangan kecil berhasil dihapus.');
+      setDelTarget(null);
     } catch {
-      // Local removal
+      addToast('error', 'Gagal menghapus small win.');
+    } finally {
+      setDelLoading(false);
     }
-
-    setSmallWins((prev) => prev.filter((w) => w.id !== delTarget.id));
-    addToast('success', 'Kemenangan kecil berhasil dihapus.');
-    setDelLoading(false);
-    setDelTarget(null);
   };
 
   const scrollToForm = () => {
@@ -367,21 +327,30 @@ export default function SmallWinsPage() {
 
           {smallWins.length === 0 ? (
             /* ── Empty State ── */
-            <div className="rounded-[28px] bg-white p-10 sm:p-14 border border-[#E8E5F0] text-center shadow-sm max-w-xl mx-auto my-6">
-              <div className="w-16 h-16 rounded-full bg-[#F8D153] mx-auto mb-6 shadow-sm" />
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-[#25233A] mb-2 tracking-[-0.02em]">
-                Belum ada kemenangan kecil
-              </h3>
-              <p className="text-sm sm:text-base text-[#6F6B80] max-w-md mx-auto leading-relaxed mb-8">
-                Mulai dari satu hal sederhana yang berhasil kamu lakukan hari ini.
-              </p>
-              <button
-                type="button"
-                onClick={scrollToForm}
-                className="px-7 py-3.5 rounded-2xl bg-[#F8D153] hover:bg-[#F5C738] text-[#25233A] font-bold text-sm transition-transform active:scale-[0.98] shadow-sm inline-block"
-              >
-                Catat kemenangan pertama
-              </button>
+            <div className="rounded-[24px] border border-[#F1D987] bg-[#FFFDF4] p-5 sm:p-6">
+              <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#F8D153] text-[#25233A]">
+                    <Flag size={24} weight="duotone" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-extrabold tracking-[-0.02em] text-[#25233A]">
+                      Belum ada kemenangan kecil
+                    </h3>
+                    <p className="mt-1 max-w-md text-sm leading-6 text-[#6F6B80]">
+                      Satu langkah sederhana hari ini cukup untuk memulai.
+                    </p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={scrollToForm}
+                  className="inline-flex min-h-11 items-center justify-center gap-2 rounded-[14px] bg-[#F8D153] px-5 text-sm font-bold text-[#25233A] shadow-sm transition-colors hover:bg-[#F5C738] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#F8D153]"
+                >
+                  Catat kemenangan pertama
+                  <ArrowRight size={16} weight="bold" />
+                </button>
+              </div>
             </div>
           ) : (
             /* ── List of Small Wins ── */
