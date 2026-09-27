@@ -10,95 +10,6 @@ import { Trash } from '@phosphor-icons/react';
 import DeleteDialog from '@/app/_components/delete-dialog';
 import HomeNavbar from '@/components/home/HomeNavbar';
 
-// ── Default Mock Data (Matching Figma / Mockup Screenshots) ─────────────────
-const initialCheckIns: EmotionalCheckIn[] = [
-  {
-    id: 'ci-1',
-    userId: 'u1',
-    emotion: 'calm',
-    intensity: 2,
-    triggerNote: null,
-    createdAt: '2026-09-23T10:00:00Z',
-  },
-  {
-    id: 'ci-2',
-    userId: 'u1',
-    emotion: 'anxious',
-    intensity: 4,
-    triggerNote: null,
-    createdAt: '2026-09-20T10:00:00Z',
-  },
-  {
-    id: 'ci-3',
-    userId: 'u1',
-    emotion: 'tired',
-    intensity: 3,
-    triggerNote: null,
-    createdAt: '2026-09-17T10:00:00Z',
-  },
-];
-
-const initialMindEntries: MindEntry[] = [
-  {
-    id: 'me-1',
-    userId: 'u1',
-    content:
-      'Hari ini terasa penuh, tapi aku berhasil menyelesaikan satu hal penting tanpa memaksa diri.',
-    isSaved: true,
-    createdAt: '2026-09-22T10:00:00Z',
-    updatedAt: '2026-09-22T10:00:00Z',
-  },
-  {
-    id: 'me-2',
-    userId: 'u1',
-    content: 'Aku ingin memberi ruang untuk istirahat tanpa merasa bersalah.',
-    isSaved: true,
-    createdAt: '2026-09-18T10:00:00Z',
-    updatedAt: '2026-09-18T10:00:00Z',
-  },
-  {
-    id: 'me-3',
-    userId: 'u1',
-    content: 'Besok aku mau memulai dengan satu tugas yang paling ringan.',
-    isSaved: true,
-    createdAt: '2026-09-15T10:00:00Z',
-    updatedAt: '2026-09-15T10:00:00Z',
-  },
-];
-
-const initialSmallWins: SmallWin[] = [
-  {
-    id: 'sw-1',
-    userId: 'u1',
-    title: 'Menyelesaikan tugas sebelum tenggat',
-    description: null,
-    category: 'Akademik',
-    winDate: '2026-09-23T10:00:00Z',
-    createdAt: '2026-09-23T10:00:00Z',
-    updatedAt: '2026-09-23T10:00:00Z',
-  },
-  {
-    id: 'sw-2',
-    userId: 'u1',
-    title: 'Berani memilih untuk istirahat',
-    description: null,
-    category: 'Diri sendiri',
-    winDate: '2026-09-21T10:00:00Z',
-    createdAt: '2026-09-21T10:00:00Z',
-    updatedAt: '2026-09-21T10:00:00Z',
-  },
-  {
-    id: 'sw-3',
-    userId: 'u1',
-    title: 'Menghubungi teman lebih dulu',
-    description: null,
-    category: 'Relasi',
-    winDate: '2026-09-19T10:00:00Z',
-    createdAt: '2026-09-19T10:00:00Z',
-    updatedAt: '2026-09-19T10:00:00Z',
-  },
-];
-
 // ── Emotion config ────────────────────────────────────────────────────────────
 const emotionConf: Record<string, { label: string; color: string; badgeBg: string; badgeText: string }> = {
   calm:        { label: 'Tenang',    color: '#45C992', badgeBg: '#E8F8F2', badgeText: '#2E7D5A' },
@@ -124,41 +35,39 @@ type DelTarget = { id: string; type: 'ci' | 'me' | 'sw'; label: string; date: st
 
 // ── Page Component ────────────────────────────────────────────────────────────
 export default function MySpacePage() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { toasts, addToast, removeToast } = useToast();
 
-  const [checkIns,    setCheckIns]    = useState<EmotionalCheckIn[]>(initialCheckIns);
-  const [mindEntries, setMindEntries] = useState<MindEntry[]>(initialMindEntries);
-  const [smallWins,   setSmallWins]   = useState<SmallWin[]>(initialSmallWins);
+  const [checkIns,    setCheckIns]    = useState<EmotionalCheckIn[]>([]);
+  const [mindEntries, setMindEntries] = useState<MindEntry[]>([]);
+  const [smallWins,   setSmallWins]   = useState<SmallWin[]>([]);
   const [loading,     setLoading]     = useState(false);
   const [errMsg,      setErrMsg]      = useState<string | null>(null);
   const [del,         setDel]         = useState<DelTarget | null>(null);
   const [delLoad,     setDelLoad]     = useState(false);
 
   const fetchAll = async () => {
+    setLoading(true);
+    setErrMsg(null);
     try {
       const [ci, me, sw] = await Promise.all([
         apiGet('/api/emotional-check-ins') as Promise<ApiResponse<EmotionalCheckIn[]>>,
         apiGet('/api/mind-entries')        as Promise<ApiResponse<MindEntry[]>>,
         apiGet('/api/small-wins')          as Promise<ApiResponse<SmallWin[]>>,
       ]);
-      if (ci?.success && Array.isArray(ci.data) && ci.data.length > 0) {
-        setCheckIns(ci.data);
-      }
-      if (me?.success && Array.isArray(me.data) && me.data.length > 0) {
-        setMindEntries(me.data);
-      }
-      if (sw?.success && Array.isArray(sw.data) && sw.data.length > 0) {
-        setSmallWins(sw.data);
-      }
+      setCheckIns(ci?.success && Array.isArray(ci.data) ? ci.data : []);
+      setMindEntries(me?.success && Array.isArray(me.data) ? me.data : []);
+      setSmallWins(sw?.success && Array.isArray(sw.data) ? sw.data : []);
     } catch {
-      // Keep fallback initial data on error
+      setErrMsg('Gagal memuat data dari server.');
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchAll();
-  }, []);
+    if (!authLoading && user) fetchAll();
+  }, [authLoading, user]);
 
   const confirmDelete = async () => {
     if (!del) return;
