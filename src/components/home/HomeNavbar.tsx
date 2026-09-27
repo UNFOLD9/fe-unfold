@@ -47,22 +47,22 @@ export default function HomeNavbar() {
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-[#E8E5F0]/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-40 w-full border-b border-[#E8E5F0] bg-white/95">
+      <div className="mx-auto max-w-[1440px] px-5 sm:px-10 lg:px-[88px]">
         <div className="flex items-center justify-between h-16 sm:h-20">
           {/* Logo & Brand */}
-          <Link href="/home" className="flex items-center gap-3 group">
-            <div className="relative w-7 h-7 sm:w-8 sm:h-8 transition-transform group-hover:scale-105">
+          <Link href="/home" className="group flex min-h-11 items-center gap-3 rounded-lg focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#5B8DEF]">
+            <div className="relative h-7 w-7 sm:h-8 sm:w-8">
               <Image
-                src="/unfold-logo.png"
-                alt="UNFOLD"
+                src="/figma/unfold-mark.svg"
+                alt=""
                 fill
                 sizes="32px"
                 className="object-contain"
                 priority
               />
             </div>
-            <span className="font-bold text-base sm:text-lg tracking-[0.18em] text-[#25233A]">
+            <span className="text-base font-extrabold tracking-[-0.03em] text-[#25233A] sm:text-lg">
               UNFOLD
             </span>
           </Link>
@@ -93,7 +93,7 @@ export default function HomeNavbar() {
               <button
                 type="button"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center gap-2 px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full border border-[#E8E5F0] bg-white hover:bg-[#F8F7FC] text-[#25233A] text-xs sm:text-sm font-medium transition-all shadow-xs"
+                className="flex min-h-11 items-center gap-2 rounded-[14px] border border-[#E8E5F0] bg-white px-3.5 text-xs font-semibold text-[#25233A] transition-colors hover:border-[#5B8DEF] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5B8DEF] sm:px-4 sm:text-sm"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -110,12 +110,12 @@ export default function HomeNavbar() {
                   <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                   <circle cx="12" cy="7" r="4" />
                 </svg>
-                <span>Akun</span>
+                <span className="max-w-32 truncate">{user?.name || "Akun"}</span>
               </button>
 
               {/* Dropdown Menu */}
               {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white border border-[#E8E5F0] shadow-xl shadow-[#25233A]/5 py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="absolute right-0 z-50 mt-2 w-56 rounded-[18px] border border-[#E8E5F0] bg-white py-2 shadow-lg shadow-[#25233A]/5">
                   <div className="px-4 py-2 border-b border-[#E8E5F0]/70">
                     <p className="text-xs text-[#6F6B80]">Masuk sebagai</p>
                     <p className="text-sm font-bold text-[#25233A] truncate">
@@ -125,6 +125,13 @@ export default function HomeNavbar() {
                   </div>
 
                   <div className="py-1">
+                    <Link
+                      href="/profile"
+                      onClick={() => setDropdownOpen(false)}
+                      className="block px-4 py-2 text-xs sm:text-sm text-[#25233A] hover:bg-[#F8F7FC] transition-colors"
+                    >
+                      Edit profil
+                    </Link>
                     <Link
                       href="/my-space"
                       onClick={() => setDropdownOpen(false)}

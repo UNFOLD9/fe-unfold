@@ -1,12 +1,9 @@
-export const BASE_URL = process.env.NEXT_PUBLIC_API?.replace(/\/$/, '');
-
 const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
 async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
-  const url = `${BASE_URL}${endpoint}`;
-  const response = await fetch(url, {
+  const response = await fetch(endpoint, {
     ...options,
     credentials: 'include',
     headers: {
@@ -14,10 +11,9 @@ async function fetchWithConfig(endpoint: string, options: RequestInit = {}) {
       ...options.headers,
     },
   });
-  
+
   try {
-    const data = await response.json();
-    return data;
+    return await response.json();
   } catch {
     if (!response.ok) {
       throw new Error(`API Error: ${response.status} ${response.statusText}`);
