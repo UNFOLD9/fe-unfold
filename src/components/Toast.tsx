@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react';
 
-type ToastKind = 'success' | 'error';
+type ToastKind = 'success' | 'error' | 'info';
 export type ToastItem = { id: string; kind: ToastKind; message: string };
 
 export function useToast() {
@@ -25,7 +25,7 @@ export function ToastContainer({ toasts, onClose }: { toasts: ToastItem[]; onClo
   return (
     <div className="fixed right-4 top-4 z-50 flex w-[min( calc(100vw-2rem),22rem)] flex-col gap-2" aria-live="polite">
       {toasts.map((toast) => (
-        <div key={toast.id} className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm shadow-lg ${toast.kind === 'success' ? 'border-[#B9E5D5] bg-[#EEFBF5] text-[#28684E]' : 'border-[#F5C2C2] bg-[#FFF2F2] text-[#A83232]'}`}>
+        <div key={toast.id} className={`flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm shadow-lg ${toast.kind === 'success' ? 'border-[#B9E5D5] bg-[#EEFBF5] text-[#28684E]' : toast.kind === 'info' ? 'border-[#C9D9FA] bg-[#F1F5FF] text-[#315EA8]' : 'border-[#F5C2C2] bg-[#FFF2F2] text-[#A83232]'}`}>
           <span>{toast.message}</span>
           <button type="button" onClick={() => onClose(toast.id)} className="min-h-8 min-w-8 rounded-lg text-lg leading-none" aria-label="Tutup notifikasi">×</button>
         </div>
