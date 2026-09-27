@@ -39,3 +39,20 @@ body {
   color: var(--text-main);
   font-family: var(--font-sans);
 }
+
+:where(
+  a[href],
+  button:not(:disabled),
+  select:not(:disabled),
+  summary,
+  label[for],
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  [role="button"]:not([aria-disabled="true"])
+) {
+  cursor: pointer;
+}
+
+:where(:disabled, [aria-disabled="true"]) {
+  cursor: not-allowed;
+}

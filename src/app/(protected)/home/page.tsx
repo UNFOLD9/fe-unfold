@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { apiGet } from "@/lib/api";
 import HomeNavbar from "@/components/home/HomeNavbar";
@@ -10,7 +10,6 @@ import WaveIllustration from "@/components/home/WaveIllustration";
 import { CheckInItem, LatestCheckInResponse } from "@/types/checkin";
 
 export default function HomePage() {
-  const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   
   const [latestCheckIn, setLatestCheckIn] = useState<CheckInItem | null>(null);
@@ -49,13 +48,6 @@ export default function HomePage() {
       isMounted = false;
     };
   }, [authLoading]);
-
-  // Auth redirection check
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push("/login");
-    }
-  }, [authLoading, user, router]);
 
   // Helper function to format check-in mood icon and label
   const getMoodDetails = (moodName: string) => {
@@ -117,7 +109,9 @@ export default function HomePage() {
     );
   }
 
-  const userName = user?.name ? user.name.split(" ")[0] : "Teman";
+  if (!user) redirect("/login");
+
+  const userName = user.name.split(" ")[0];
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F8F7FC] text-[#25233A]">
