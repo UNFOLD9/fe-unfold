@@ -15,14 +15,16 @@ export default function UnloadPage() {
   const [submitting, setSubmitting] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [showDiscardModal, setShowDiscardModal] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const handleSave = async () => {
     if (!content.trim()) {
-      addToast('error', 'Tulis sesuatu terlebih dahulu.');
+      setHasError(true);
       return;
     }
 
     setSubmitting(true);
+    setHasError(false);
     try {
       await apiPost('/api/mind-entries', {
         content: content.trim(),
@@ -38,6 +40,7 @@ export default function UnloadPage() {
 
   const handleDiscardConfirm = () => {
     setContent('');
+    setHasError(false);
     setShowDiscardModal(false);
     addToast('info', 'Tulisan dibuang.');
   };
@@ -157,26 +160,58 @@ export default function UnloadPage() {
             </div>
           </div>
         ) : (
-          /* ── Writing Card (Foto 1 & Foto 3) ── */
+          /* ── Writing Card (Normal & Validation Error State) ── */
           <div className="rounded-[28px] bg-white p-6 sm:p-8 border border-[#E8E5F0] shadow-sm space-y-4">
             <div>
-              <h2 className="text-xl sm:text-2xl font-extrabold text-[#25233A] tracking-[-0.01em] mb-1">
-                Apa yang ingin kamu lepaskan hari ini?
-              </h2>
-              <p className="text-xs sm:text-sm text-[#6F6B80]">
-                Tulis sebanyak atau sesingkat yang kamu butuhkan.
-              </p>
+              {hasError ? (
+                /* Validation Error Header */
+                <>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-[#25233A] tracking-[-0.01em] mb-1">
+                    Tulisan belum bisa disimpan
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[#6F6B80] mb-4">
+                    Isi refleksi tidak boleh kosong.
+                  </p>
+                  <label className="block text-sm font-bold text-[#25233A] mb-1">
+                    Apa yang ingin kamu lepaskan hari ini?
+                  </label>
+                </>
+              ) : (
+                /* Normal Header */
+                <>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-[#25233A] tracking-[-0.01em] mb-1">
+                    Apa yang ingin kamu lepaskan hari ini?
+                  </h2>
+                  <p className="text-xs sm:text-sm text-[#6F6B80]">
+                    Tulis sebanyak atau sesingkat yang kamu butuhkan.
+                  </p>
+                </>
+              )}
             </div>
 
             {/* Textarea */}
             <div>
               <textarea
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={(e) => {
+                  setContent(e.target.value);
+                  if (e.target.value.trim() && hasError) {
+                    setHasError(false);
+                  }
+                }}
                 placeholder="Mulai menulis di sini..."
                 rows={12}
-                className="w-full rounded-[22px] border border-[#E8E5F0] p-4 sm:p-5 text-sm sm:text-base text-[#25233A] placeholder-[#9A94AA] focus:border-[#FFA87E] focus:outline-none transition-colors resize-none leading-relaxed"
+                className={`w-full rounded-[22px] p-4 sm:p-5 text-sm sm:text-base text-[#25233A] placeholder-[#9A94AA] focus:outline-none transition-colors resize-none leading-relaxed border ${
+                  hasError
+                    ? 'border-[#D04A42] focus:border-[#D04A42]'
+                    : 'border-[#E8E5F0] focus:border-[#FFA87E]'
+                }`}
               />
+              {hasError && (
+                <p className="text-xs font-semibold text-[#D04A42] mt-1.5">
+                  Tuliskan minimal satu kalimat sebelum menyimpan.
+                </p>
+              )}
             </div>
 
             {/* Bottom Actions Row */}
@@ -188,6 +223,7 @@ export default function UnloadPage() {
                     setShowDiscardModal(true);
                   } else {
                     setContent('');
+                    setHasError(false);
                   }
                 }}
                 className="px-5 py-2.5 rounded-2xl bg-white hover:bg-[#FAF9FD] text-[#25233A] font-semibold text-xs sm:text-sm border border-[#E8E5F0] transition-colors"
@@ -197,7 +233,7 @@ export default function UnloadPage() {
               <button
                 type="button"
                 onClick={handleSave}
-                disabled={submitting || !content.trim()}
+                disabled={submitting}
                 className="px-6 py-2.5 rounded-2xl bg-[#FFA87E] hover:bg-[#FF9666] text-[#25233A] font-bold text-xs sm:text-sm shadow-sm transition-transform active:scale-[0.98] disabled:opacity-50"
               >
                 {submitting ? 'Menyimpan...' : 'Simpan refleksi'}

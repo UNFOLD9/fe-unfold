@@ -380,13 +380,13 @@ export default function MySpacePage() {
               </p>
             </div>
 
-            <button
-              type="button"
+            <Link
+              href="/unload"
               className="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-[#25233A] shadow-sm hover:bg-[#FAF9FD] transition-colors shrink-0"
             >
               <span className="sm:hidden">Semua</span>
               <span className="hidden sm:inline">Lihat semua</span>
-            </button>
+            </Link>
           </div>
 
           <div className="mt-4 space-y-2.5">
@@ -441,13 +441,13 @@ export default function MySpacePage() {
               </p>
             </div>
 
-            <button
-              type="button"
+            <Link
+              href="/small-wins"
               className="rounded-full bg-white px-4 py-1.5 text-xs font-semibold text-[#25233A] shadow-sm hover:bg-[#FAF9FD] transition-colors shrink-0"
             >
               <span className="sm:hidden">Semua</span>
               <span className="hidden sm:inline">Lihat semua</span>
-            </button>
+            </Link>
           </div>
 
           <div className="mt-4 space-y-2.5">

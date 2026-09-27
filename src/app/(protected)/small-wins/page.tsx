@@ -16,7 +16,7 @@ const initialSmallWins: (SmallWin & { dotColor?: string })[] = [
     title: 'Menyelesaikan tugas sebelum tenggat',
     description: null,
     category: 'Akademik',
-    winDate: '2026-09-23T10:00:00Z',
+    winDate: '2026-09-23',
     createdAt: '2026-09-23T10:00:00Z',
     updatedAt: '2026-09-23T10:00:00Z',
     dotColor: '#F5C738',
@@ -27,7 +27,7 @@ const initialSmallWins: (SmallWin & { dotColor?: string })[] = [
     title: 'Berani bilang tidak saat butuh istirahat',
     description: null,
     category: 'Diri sendiri',
-    winDate: '2026-09-21T10:00:00Z',
+    winDate: '2026-09-21',
     createdAt: '2026-09-21T10:00:00Z',
     updatedAt: '2026-09-21T10:00:00Z',
     dotColor: '#45C992',
@@ -38,7 +38,7 @@ const initialSmallWins: (SmallWin & { dotColor?: string })[] = [
     title: 'Menghubungi teman lebih dulu',
     description: null,
     category: 'Relasi',
-    winDate: '2026-09-19T10:00:00Z',
+    winDate: '2026-09-19',
     createdAt: '2026-09-19T10:00:00Z',
     updatedAt: '2026-09-19T10:00:00Z',
     dotColor: '#5B8DEF',
@@ -62,14 +62,6 @@ function fmtDate(d: string) {
   });
 }
 
-function fmtDateLong(d: Date) {
-  return d.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-}
-
 export default function SmallWinsPage() {
   const { user } = useAuth();
   const { toasts, addToast, removeToast } = useToast();
@@ -79,16 +71,13 @@ export default function SmallWinsPage() {
 
   // Form states
   const [title, setTitle] = useState('');
-  const [selectedDate, setSelectedDate] = useState<string>(() => {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  });
+  const [selectedDate, setSelectedDate] = useState<string>('2026-09-27');
   const [selectedCategory, setSelectedCategory] = useState<string | null>('Akademik');
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  // Validation Error State
+  const [hasError, setHasError] = useState(false);
 
   // Delete modal state
   const [delTarget, setDelTarget] = useState<{ id: string; title: string } | null>(null);
@@ -124,35 +113,49 @@ export default function SmallWinsPage() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) {
-      addToast('error', 'Mohon isi judul kemenangan.');
+      setHasError(true);
       return;
     }
 
     setSubmitting(true);
+    setHasError(false);
+    const dateOnly = selectedDate || new Date().toISOString().split('T')[0];
     const newWin: SmallWin & { dotColor: string } = {
       id: `sw-${Date.now()}`,
       userId: user?.id || 'u1',
       title: title.trim(),
       description: notes.trim() || null,
       category: selectedCategory,
-      winDate: selectedDate ? new Date(selectedDate).toISOString() : new Date().toISOString(),
+      winDate: dateOnly,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       dotColor: selectedCategory ? categoryColors[selectedCategory] ?? '#F5C738' : '#F5C738',
     };
 
+    const payload: Record<string, unknown> = {
+      title: title.trim(),
+      winDate: dateOnly,
+    };
+    if (selectedCategory) payload.category = selectedCategory;
+    if (notes.trim()) payload.description = notes.trim();
+
     try {
-      await apiPost('/api/small-wins', {
-        title: title.trim(),
-        description: notes.trim() || null,
-        category: selectedCategory,
-        winDate: selectedDate ? new Date(selectedDate).toISOString() : new Date().toISOString(),
-      });
+      const res = (await apiPost('/api/small-wins', payload)) as ApiResponse<SmallWin>;
+      if (res?.success && res.data) {
+        setSmallWins((prev) => [
+          {
+            ...res.data,
+            dotColor: selectedCategory ? categoryColors[selectedCategory] ?? '#F5C738' : '#F5C738',
+          },
+          ...prev,
+        ]);
+      } else {
+        setSmallWins((prev) => [newWin, ...prev]);
+      }
     } catch {
-      // Local addition succeeds regardless for preview
+      setSmallWins((prev) => [newWin, ...prev]);
     }
 
-    setSmallWins((prev) => [newWin, ...prev]);
     setTitle('');
     setNotes('');
     addToast('success', 'Kemenangan kecil berhasil dicatat!');
@@ -250,17 +253,42 @@ export default function SmallWinsPage() {
 
       {/* ── Main Content Container ── */}
       <main className="flex-1 mx-auto w-full max-w-5xl px-5 py-6 sm:px-8 sm:py-8 space-y-7 sm:space-y-8">
-        {/* ── Form Card: "Apa kemenangan kecilmu hari ini?" ── */}
+        {/* ── Form Card: Normal vs Validation Error State (Foto 1) ── */}
         <div
           ref={formRef}
           className="rounded-[28px] bg-white p-6 sm:p-8 border border-[#E8E5F0] shadow-sm"
         >
-          <h2 className="text-xl sm:text-2xl font-extrabold text-[#25233A] tracking-[-0.01em] mb-1">
-            Apa kemenangan kecilmu hari ini?
-          </h2>
-          <p className="text-xs sm:text-sm text-[#6F6B80] mb-6">
-            Tidak harus besar. Satu langkah kecil tetap berarti.
-          </p>
+          {hasError ? (
+            /* ── Validation Error State (Foto 1) ── */
+            <>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-[#25233A] tracking-[-0.01em] mb-1">
+                Lengkapi small win
+              </h2>
+              <p className="text-xs sm:text-sm text-[#6F6B80] mb-5">
+                Judul dan tanggal diperlukan agar catatan bisa disimpan.
+              </p>
+
+              {/* Alert Error Box */}
+              <div className="rounded-2xl bg-[#FDF2F0] border border-[#FADCD9] p-4 mb-5">
+                <p className="text-sm font-bold text-[#D04A42] mb-0.5">
+                  Belum bisa disimpan
+                </p>
+                <p className="text-xs text-[#D04A42]">
+                  Periksa dua field yang ditandai merah.
+                </p>
+              </div>
+            </>
+          ) : (
+            /* ── Normal State ── */
+            <>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-[#25233A] tracking-[-0.01em] mb-1">
+                Apa kemenangan kecilmu hari ini?
+              </h2>
+              <p className="text-xs sm:text-sm text-[#6F6B80] mb-6">
+                Tidak harus besar. Satu langkah kecil tetap berarti.
+              </p>
+            </>
+          )}
 
           <form onSubmit={handleCreate} className="space-y-4 sm:space-y-5">
             {/* Row: Judul & Tanggal */}
@@ -272,11 +300,24 @@ export default function SmallWinsPage() {
                 <input
                   type="text"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Contoh: Berani bertanya di kelas"
-                  className="w-full px-4 py-3 rounded-2xl border border-[#E8E5F0] bg-white text-sm text-[#25233A] placeholder-[#9A94AA] focus:border-[#F8D153] focus:outline-none transition-colors"
-                  required
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                    if (e.target.value.trim() && hasError) {
+                      setHasError(false);
+                    }
+                  }}
+                  placeholder={hasError ? "Contoh: Menyelesaikan tugas" : "Contoh: Berani bertanya di kelas"}
+                  className={`w-full px-4 py-3 rounded-2xl text-sm text-[#25233A] placeholder-[#9A94AA] focus:outline-none transition-colors border ${
+                    hasError
+                      ? 'border-[#D04A42] focus:border-[#D04A42]'
+                      : 'border-[#E8E5F0] focus:border-[#F8D153] bg-white'
+                  }`}
                 />
+                {hasError && (
+                  <p className="text-xs font-semibold text-[#D04A42] mt-1">
+                    Judul tidak boleh kosong.
+                  </p>
+                )}
               </div>
 
               <div>
@@ -286,10 +327,23 @@ export default function SmallWinsPage() {
                 <input
                   type="date"
                   value={selectedDate}
-                  onChange={(e) => setSelectedDate(e.target.value)}
-                  className="w-full px-4 py-3 rounded-2xl border border-[#E8E5F0] bg-white text-sm text-[#25233A] focus:border-[#F8D153] focus:outline-none transition-colors cursor-pointer"
-                  required
+                  onChange={(e) => {
+                    setSelectedDate(e.target.value);
+                    if (e.target.value && hasError) {
+                      setHasError(false);
+                    }
+                  }}
+                  className={`w-full px-4 py-3 rounded-2xl text-sm text-[#25233A] focus:outline-none transition-colors cursor-pointer border ${
+                    hasError
+                      ? 'border-[#D04A42] focus:border-[#D04A42]'
+                      : 'border-[#E8E5F0] focus:border-[#F8D153] bg-white'
+                  }`}
                 />
+                {hasError && (
+                  <p className="text-xs font-semibold text-[#D04A42] mt-1">
+                    Tanggal wajib dipilih.
+                  </p>
+                )}
               </div>
             </div>
 
