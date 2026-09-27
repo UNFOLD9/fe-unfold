@@ -93,24 +93,20 @@ export default function HomeNavbar() {
               <button
                 type="button"
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex min-h-11 items-center gap-2 rounded-[14px] border border-[#E8E5F0] bg-white px-3.5 text-xs font-semibold text-[#25233A] transition-colors hover:border-[#5B8DEF] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5B8DEF] sm:px-4 sm:text-sm"
+                className="flex min-h-10 items-center gap-2 rounded-full border border-[#E8E5F0] bg-white px-3 sm:px-4 py-1.5 text-xs font-semibold text-[#25233A] transition-colors hover:border-[#5B8DEF] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5B8DEF]"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="text-[#6F6B80]"
-                >
-                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                  <circle cx="12" cy="7" r="4" />
-                </svg>
-                <span className="max-w-32 truncate">{user?.name || "Akun"}</span>
+                <div className="w-7 h-7 rounded-full bg-[#EDE9FA] text-[#5B8DEF] font-bold text-xs flex items-center justify-center shrink-0">
+                  {user?.name
+                    ? user.name
+                        .trim()
+                        .split(/\s+/)
+                        .slice(0, 2)
+                        .map((p) => p[0])
+                        .join('')
+                        .toUpperCase()
+                    : 'KK'}
+                </div>
+                <span className="hidden sm:inline max-w-28 truncate">{user?.name || "Akun"}</span>
               </button>
 
               {/* Dropdown Menu */}
@@ -130,14 +126,7 @@ export default function HomeNavbar() {
                       onClick={() => setDropdownOpen(false)}
                       className="block px-4 py-2 text-xs sm:text-sm text-[#25233A] hover:bg-[#F8F7FC] transition-colors"
                     >
-                      Edit profil
-                    </Link>
-                    <Link
-                      href="/my-space"
-                      onClick={() => setDropdownOpen(false)}
-                      className="block px-4 py-2 text-xs sm:text-sm text-[#25233A] hover:bg-[#F8F7FC] transition-colors"
-                    >
-                      My Space
+                      Profil akun
                     </Link>
                     <Link
                       href="/support"
