@@ -26,20 +26,11 @@ function fmtDate(d: string) {
   });
 }
 
-function fmtDateLong(d: Date) {
-  return d.toLocaleDateString('id-ID', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-}
-
 export default function SmallWinsPage() {
   const { user, loading: authLoading } = useAuth();
   const { toasts, addToast, removeToast } = useToast();
 
   const [smallWins, setSmallWins] = useState<(SmallWin & { dotColor?: string })[]>([]);
-  const [loading, setLoading] = useState(false);
 
   // Form states
   const [title, setTitle] = useState('');
@@ -50,7 +41,7 @@ export default function SmallWinsPage() {
     const day = String(now.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   });
-  const [selectedCategory, setSelectedCategory] = useState<string | null>('Akademik');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [notes, setNotes] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -60,33 +51,42 @@ export default function SmallWinsPage() {
 
   const formRef = useRef<HTMLDivElement>(null);
 
-  const fetchWins = async () => {
-    try {
-      const res = (await apiGet('/api/small-wins')) as ApiResponse<SmallWin[]>;
-      if (res?.success && Array.isArray(res.data)) {
-        const enriched = res.data.map((item, idx) => ({
-          ...item,
-          dotColor: item.category
-            ? categoryColors[item.category] ?? '#F5C738'
-            : idx % 3 === 0
-            ? '#F5C738'
-            : idx % 3 === 1
-            ? '#45C992'
-            : '#5B8DEF',
-        }));
-        setSmallWins(enriched);
-      } else {
-        setSmallWins([]);
-      }
-    } catch {
-      setSmallWins([]);
-      addToast('error', 'Gagal memuat small wins dari server.');
-    }
-  };
-
   useEffect(() => {
-    if (!authLoading && user) fetchWins();
-  }, [authLoading, user]);
+    if (!authLoading && user) {
+      let ignore = false;
+      apiGet('/api/small-wins')
+        .then((res) => {
+          if (!ignore) {
+            const result = res as ApiResponse<SmallWin[]>;
+            if (result?.success && Array.isArray(result.data)) {
+              const enriched = result.data.map((item, idx) => ({
+                ...item,
+                dotColor: item.category
+                  ? categoryColors[item.category] ?? '#F5C738'
+                  : idx % 3 === 0
+                  ? '#F5C738'
+                  : idx % 3 === 1
+                  ? '#45C992'
+                  : '#5B8DEF',
+              }));
+              setSmallWins(enriched);
+            } else {
+              setSmallWins([]);
+            }
+          }
+        })
+        .catch(() => {
+          if (!ignore) {
+            setSmallWins([]);
+            addToast('error', 'Gagal memuat small wins dari server.');
+          }
+        });
+
+      return () => {
+        ignore = true;
+      };
+    }
+  }, [authLoading, user, addToast]);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,13 +97,32 @@ export default function SmallWinsPage() {
 
     setSubmitting(true);
     try {
-      const res = await apiPost('/api/small-wins', {
+      const payload: {
+        title: string;
+        winDate: string;
+        description?: string;
+        category?: string;
+      } = {
         title: title.trim(),
-        description: notes.trim() || null,
-        category: selectedCategory,
         winDate: selectedDate,
-      }) as ApiResponse<SmallWin>;
-      if (!res.success || !res.data) throw new Error('Gagal menyimpan small win.');
+      };
+
+      if (notes.trim()) {
+        payload.description = notes.trim();
+      }
+
+      if (selectedCategory) {
+        payload.category = selectedCategory;
+      }
+
+      const res = (await apiPost('/api/small-wins', payload)) as ApiResponse<SmallWin>;
+      if (!res || !res.success || !res.data) {
+        const errorMsg =
+          res?.message ||
+          (res && 'errors' in res && res.errors ? Object.values(res.errors)[0]?.[0] : null) ||
+          'Gagal menyimpan small win.';
+        throw new Error(errorMsg);
+      }
       const newWin = {
         ...res.data,
         dotColor: res.data.category ? categoryColors[res.data.category] ?? '#F5C738' : '#F5C738',
@@ -111,9 +130,10 @@ export default function SmallWinsPage() {
       setSmallWins((prev) => [newWin, ...prev]);
       setTitle('');
       setNotes('');
+      setSelectedCategory(null);
       addToast('success', 'Kemenangan kecil berhasil dicatat!');
-    } catch {
-      addToast('error', 'Gagal menyimpan small win.');
+    } catch (err) {
+      addToast('error', err instanceof Error ? err.message : 'Gagal menyimpan small win.');
     } finally {
       setSubmitting(false);
     }
