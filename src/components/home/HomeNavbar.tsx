@@ -31,10 +31,10 @@ export default function HomeNavbar() {
   const handleLogout = async () => {
     try {
       await logout();
-      router.push("/login");
     } catch (err) {
       console.error("Logout error:", err);
-      router.push("/login");
+    } finally {
+      window.location.href = "/";
     }
   };
 

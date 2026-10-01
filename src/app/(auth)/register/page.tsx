@@ -14,11 +14,12 @@ export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [agreed, setAgreed] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   
   const [error, setError] = useState<string | null>(null);
-  const [fieldErrors, setFieldErrors] = useState<{ name?: string[]; email?: string[]; password?: string[] }>({});
+  const [fieldErrors, setFieldErrors] = useState<{ name?: string[]; email?: string[]; password?: string[]; agreement?: string[] }>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,7 +29,7 @@ export default function RegisterPage() {
 
     // Client-side validation
     let hasError = false;
-    const newFieldErrors: { name?: string[]; email?: string[]; password?: string[] } = {};
+    const newFieldErrors: { name?: string[]; email?: string[]; password?: string[]; agreement?: string[] } = {};
 
     if (!name.trim()) {
       newFieldErrors.name = ["Nama tidak boleh kosong"];
@@ -48,6 +49,11 @@ export default function RegisterPage() {
       hasError = true;
     } else if (password.length < 8) {
       newFieldErrors.password = ["Kata sandi minimal 8 karakter"];
+      hasError = true;
+    }
+
+    if (!agreed) {
+      newFieldErrors.agreement = ["Kamu harus menyetujui Syarat & Ketentuan serta Kebijakan Privasi"];
       hasError = true;
     }
 
@@ -171,11 +177,44 @@ export default function RegisterPage() {
           )}
         </div>
 
+        {/* Terms & Privacy Agreement */}
+        <div className="space-y-1.5 pt-1">
+          <label className="flex items-start gap-2.5 cursor-pointer select-none">
+            <input
+              id="register-agreement"
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => {
+                setAgreed(e.target.checked);
+                if (fieldErrors.agreement) {
+                  setFieldErrors((prev) => ({ ...prev, agreement: undefined }));
+                }
+              }}
+              disabled={isLoading}
+              className="mt-0.5 h-4 w-4 rounded border-border-main text-primary focus:ring-primary/20 accent-[#5B8DEF] cursor-pointer shrink-0"
+            />
+            <span className="text-xs leading-relaxed text-text-muted">
+              Saya menyetujui{" "}
+              <span className="text-text-main font-medium">Syarat &amp; Ketentuan</span> serta{" "}
+              <Link
+                href="/privacy-policy"
+                target="_blank"
+                className="font-medium text-primary hover:underline hover:text-primary/80 transition-colors"
+              >
+                Kebijakan Privasi
+              </Link>
+            </span>
+          </label>
+          {fieldErrors.agreement && (
+            <p className="text-xs text-red-500 pl-6.5">{fieldErrors.agreement[0]}</p>
+          )}
+        </div>
+
         {/* Submit Button */}
         <button
           type="submit"
-          disabled={isLoading}
-          className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 rounded-xl transition-all duration-200 active:scale-[0.98] disabled:opacity-70 disabled:pointer-events-none flex items-center justify-center gap-2 mt-2"
+          disabled={isLoading || !agreed}
+          className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-3 rounded-xl transition-all duration-200 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-2"
         >
           {isLoading ? (
             <>
@@ -185,9 +224,6 @@ export default function RegisterPage() {
           ) : (
             "Buat akun"
           )}
-        </button>
-        <button type="button" disabled className="mx-auto block cursor-not-allowed text-xs font-medium text-primary/60">
-          Kebijakan Privasi
         </button>
       </form>
 

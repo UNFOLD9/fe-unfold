@@ -39,10 +39,10 @@ export default function ProfilePage() {
   const handleLogout = async () => {
     try {
       await logout();
-      addToast('info', 'Berhasil keluar dari akun.');
-      router.push('/login');
-    } catch {
-      router.push('/login');
+    } catch (err) {
+      console.error("Logout error:", err);
+    } finally {
+      window.location.href = "/";
     }
   };
 

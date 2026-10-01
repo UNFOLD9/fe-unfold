@@ -26,7 +26,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } else {
         setUser(null);
       }
-    } catch (error) {
+    } catch {
       setUser(null);
     } finally {
       setLoading(false);
@@ -34,7 +34,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    fetchUser();
+    let ignore = false;
+    apiGet('/api/auth/me')
+      .then((res) => {
+        if (!ignore) {
+          const authRes = res as ApiResponse<User>;
+          if (authRes && authRes.success && authRes.data) {
+            setUser(authRes.data);
+          } else {
+            setUser(null);
+          }
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (!ignore) {
+          setUser(null);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      ignore = true;
+    };
   }, []);
 
   const login = async (data: LoginInput): Promise<ApiResponse<User>> => {
@@ -54,8 +76,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async (): Promise<void> => {
-    await apiPost('/api/auth/logout', {});
-    setUser(null);
+    try {
+      await apiPost('/api/auth/logout', {});
+    } catch (e) {
+      console.error('Logout error:', e);
+    } finally {
+      setUser(null);
+      try {
+        document.cookie = "unfold_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      } catch {}
+    }
   };
 
   return (
